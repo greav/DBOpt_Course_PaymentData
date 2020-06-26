@@ -163,22 +163,24 @@ class SQLAdapter:
             self.execute(query)
         self.commit()
 
-    def generate_payments(self, n):
+    def generate_payments(self, n, lock=""):
         categories = [
             category[0]
             for category in self._cursor.execute(
-                "SELECT Oid FROM [dbo].[PaymentCategory]"
+                f"SELECT Oid FROM [dbo].[PaymentCategory] {lock}"
             )
         ]
         participants = [
             participant[0]
             for participant in self._cursor.execute(
-                "SELECT Oid FROM [dbo].[PaymentParticipant]"
+                f"SELECT Oid FROM [dbo].[PaymentParticipant] {lock}"
             )
         ]
         projects = [
             project[0]
-            for project in self._cursor.execute("SELECT Oid FROM [dbo].[Project]")
+            for project in self._cursor.execute(
+                f"SELECT Oid FROM [dbo].[Project] {lock}"
+            )
         ]
         for _ in range(n):
             category = random.choice(categories)
